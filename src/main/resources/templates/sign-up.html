@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html  xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="shortcut icon" href="/img/icons/book_icon.png" />
+    <link href="/css/app.css" rel="stylesheet">
+    <link href="/css/general.css" rel="stylesheet">
+
+    <title>Sign Up</title>
+
+
+    <style>
+
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+<main class="d-flex w-100">
+  <div class="container d-flex flex-column">
+    <div class="row vh-100">
+      <div class="col-sm-10 col-md-8 col-lg-6 mx-auto d-table h-100">
+        <div class="d-table-cell align-middle">
+
+          <div class="text-center mt-4">
+            <h1 class="h2">Sign up for an account</h1>
+            <p class="lead">
+<!--              Start creating the best possible user experience for you customers.-->
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="card-body">
+              <div class="m-sm-4">
+                  <div class="text-center" >
+                      <a href="/">
+                          <img src="/img/photos/book_logo.png" alt="Hà Lan" class="img-fluid rounded-circle"
+                               width="132" height="132" />
+                      </a>
+
+                  </div>
+                <form th:action = "@{/register}" th:object="${account}" method="post">
+                  <div class="mb-3">
+                    <label class="form-label" for="username">Username<span>*</span></label>
+                    <input class="form-control form-control-lg" type="text" id="username" name="username" placeholder="Enter your username" />
+                      <p th:text="${messageUsername}"  style="color:red;"/>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label" for="password">Password<span>*</span></label>
+                    <input class="form-control form-control-lg" type="password" id="password" name="password"  placeholder="Enter password" />
+                      <p th:text="${messagePassword}"  style="color:red;"/>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label" for="rePassword">Re-type Password<span>*</span></label>
+                    <input class="form-control form-control-lg" type="password" id="rePassword" name="note"   placeholder="Re-type password" />
+                      <p th:text="${messageRePassword}"  style="color:red;"/>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label" for="email">Email<span>*</span></label>
+                    <input class="form-control form-control-lg" type="email" id="email" name="email" placeholder="Enter your email" />
+                      <p th:text="${messageEmail}"  style="color:red;"/>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label" for="fullName">Full Name<span>*</span></label>
+                    <input class="form-control form-control-lg" type="text" id="fullName" name="fullName" placeholder="Enter your Full Name" />
+                      <p th:text="${messageFullName}"  style="color:red;"/>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label" for="dateOfBirth">Date of Birth</label>
+                    <input class="form-control form-control-lg" type="date" id="dateOfBirth" name="dateOfBirth" min="1950-01-01" max="2017-12-31" />
+                  </div>
+                    <p>Already have an account? <a href="/login">Login</a> </p>
+
+                  <div class="text-center mt-3">
+<!--                    <a href="index.html" class="btn btn-lg btn-primary">Sign up</a>-->
+                     <button type="submit" class="btn btn-lg btn-primary">Sign up</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script src="/js/app.js"></script>
+
+</body>
+
+</html>
