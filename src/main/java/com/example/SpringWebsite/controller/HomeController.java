@@ -53,6 +53,7 @@ public class HomeController {
     public String Login(@ModelAttribute("account") Account account, Model model, HttpSession session){
         System.out.println("POST LOGIN");
 
+
         //Validate field empty
         if( Objects.equals(account.getUsername().trim(), "") || (Objects.equals(account.getPassword(), ""))){
             model.addAttribute("messageUsername",Objects.equals(account.getUsername().trim(), "") ? "This field cannot be empty" : null);
@@ -116,46 +117,56 @@ public class HomeController {
 
 
         //Validate format
-        int error = 0;
+        int errorFormat = 0;
         //Validate format username and email
         if(!UsernameIsValid(account.getUsername().trim())){
             model.addAttribute("messageUsername","Usernames can only contain letters (a-z), numbers (0-9),periods (.). The number of characters must be between 5 to 20.");
-            error++;
+            errorFormat++;
         }
+        account.setEmail(account.getEmail().toLowerCase());
         if (!EmailIsValid(account.getEmail().trim())){
             model.addAttribute("messageEmail","Incorrect email format.");
-            error++;
+            errorFormat++;
         }
 
 
         //Validate password
         if (!PasswordIsValid(account.getPassword())){
             model.addAttribute("messagePassword","Password must not contain spaces and must be 8-30 characters in length");
-            error++;
+            errorFormat++;
         }
 
         //Validate re-type password
         if(!Objects.equals(account.getPassword(), account.getNote())){
             model.addAttribute("messageRePassword", "The passwords are not the same.");
-            error++;
+            errorFormat++;
         }
 
         //Validate fullname
         if(!FullNameIsValid(account.getFullName().trim())){
             model.addAttribute("messageFullName", "The fullname contains only characters from a to z and is between 2 and 40 characters long");
-            error++;
+            errorFormat++;
         }
 
-        if (error > 0) return "sign-up";
+        if (errorFormat > 0) return "sign-up";
 
 
+        // Validate account already  exist?
+        int errorExist = 0;
+        // Email has taken by other user?
+        Account accountByEmail = accountRepository.findAccountByEmail(account.getEmail().trim());
+        if (accountByEmail != null){
+            model.addAttribute("messageEmail","Email has been taken");
+            errorExist++;
+        }
 
-        //Validate username has been taken or not?
+        //Username has been taken or not?
         Account foundAccount = accountRepository.findByUsername(account.getUsername());
         if (foundAccount != null){ //Username already exists in db
             model.addAttribute("messageUsername","Username has taken");
-            return "sign-up";
+            errorExist++;
         }
+        if (errorExist > 0) return "sign-up";
 
         //Username does not exist in db
 
@@ -163,9 +174,15 @@ public class HomeController {
         System.out.println(account);
         accountRepository.save(account);
         System.out.println("    Account Register : " + account);
-        return "redirect:/";
+        return "redirect:/login";
 
 
+    }
+
+    @GetMapping("/test")
+    public String Test(){
+
+        return "test";
     }
 
 

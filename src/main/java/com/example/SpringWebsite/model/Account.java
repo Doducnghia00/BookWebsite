@@ -27,13 +27,13 @@ public class Account {
     public Account(String username, String password, String email) {
         this.username = username;
         this.password = password;
-        this.email = email;
+        this.email = email.toLowerCase();
     }
 
     public Account(String username, String password, String email, String fullName, String dateOfBirth, String note) {
         this.username = username;
         this.password = password;
-        this.email = email;
+        this.email = email.toLowerCase();
         this.fullName = fullName;
         this.dateOfBirth = dateOfBirth;
         this.note = note;
@@ -41,7 +41,7 @@ public class Account {
     public Account(String username, String password, String email, String fullName) {
         this.username = username;
         this.password = password;
-        this.email = email;
+        this.email = email.toLowerCase();
         this.fullName = fullName;
     }
 
