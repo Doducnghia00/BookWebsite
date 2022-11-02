@@ -9,8 +9,17 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -20,6 +29,7 @@ import java.util.regex.Pattern;
 
 @Controller
 public class HomeController {
+
 
     final
     AccountRepository accountRepository;
@@ -60,10 +70,6 @@ public class HomeController {
             model.addAttribute("messagePassword", Objects.equals(account.getPassword().trim(), "") ? "This field cannot be empty" : null);
             return "sign-in";
         }
-
-
-
-
 
         Account foundAccount = accountRepository.findAccountByUsernameAndPassword(account.getUsername().trim(), account.getPassword().trim());
         if(foundAccount != null){
@@ -181,8 +187,25 @@ public class HomeController {
 
     @GetMapping("/test")
     public String Test(){
-
+        System.out.println("GET TEST");
         return "test";
+    }
+    @PostMapping("/test")
+    public String postTest(@RequestParam("image") MultipartFile image){
+        System.out.println("POST TEST");
+
+//        Path path = Paths.get("/uploads");
+        Path path = Paths.get("E:\\WebImg");
+        if(image.isEmpty()){
+            return "index";
+        }
+        try{
+            InputStream inputStream = image.getInputStream();
+            Files.copy(inputStream,path.resolve(image.getOriginalFilename()), StandardCopyOption.REPLACE_EXISTING);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return "/test";
     }
 
 

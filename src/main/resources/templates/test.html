@@ -1,60 +1,124 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+
 <head>
-    <meta charset="UTF-8">
-    <title>Test</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
 
-    <script src="/js/bootstrap.js"></script>
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="shortcut icon" href="/img/icons/book_icon.png" />
+
+
+
+    <title>Test</title>
+
     <link href="/css/app.css" rel="stylesheet">
     <link href="/css/general.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
-<body>
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">Open modal for @mdo</button>
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@fat">Open modal for @fat</button>
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@getbootstrap">Open modal for @getbootstrap</button>
 
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">New message</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form>
-                        <div class="form-group">
-                            <label for="recipient-name" class="col-form-label">Recipient:</label>
-                            <input type="text" class="form-control" id="recipient-name">
+<body>
+<div class="wrapper">
+
+
+    <div class="main">
+
+        <nav class="navbar navbar-expand navbar-light navbar-bg">
+
+
+            <a class="sidebar-toggle js-sidebar-toggle"></a>
+
+
+
+            <div class="navbar-collapse collapse">
+                <ul class="navbar-nav navbar-align mx-auto ">
+                    <a class="navbar-brand brand" href="/">
+                        <img src="/img/photos/cover.png" alt="Library Online">
+                    </a>
+                </ul>
+
+                <ul class="navbar-nav navbar-align ">
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-icon dropdown-toggle d-inline-block d-sm-none" href="#" data-bs-toggle="dropdown">
+                            <i class="align-middle" data-feather="settings"></i>
+                        </a>
+                        <a class="nav-link dropdown-toggle d-none d-sm-inline-block" href="#" data-bs-toggle="dropdown">
+                            <img src="/img/avatars/Ngan.jpg" class="avatar img-fluid rounded me-1" alt="User's avatar" />
+                            <span class="text-dark" th:text="${session.fullName}" th:unless="${session == null}"></span>
+                            <span class="text-dark" th:text="Guest" th:unless="${session.fullName != null}"></span>
+                        </a>
+                        <div th:if="${session.fullName != null}" class="dropdown-menu dropdown-menu-end">
+                            <a class="dropdown-item" href="/profile"><i class="align-middle me-1" data-feather="user"></i> Profile</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="/login">Logout</a>
                         </div>
-                        <div class="form-group">
-                            <label for="message-text" class="col-form-label">Message:</label>
-                            <textarea class="form-control" id="message-text"></textarea>
+                        <div th:if="${session.fullName == null}" class="dropdown-menu dropdown-menu-end">
+                            <a class="dropdown-item" href="/login">Login</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <main class="content">
+            <div class="container-fluid p-0">
+                <div class="d-flex justify-content-center">
+                    <form class="form-control w-50" th:action="@{/test}" th:method="post" enctype="multipart/form-data">
+                        <label for="formFile" class="form-label">Default file input example</label>
+                        <input class="form-control" type="file" name="image" id="formFile" accept="image/png, image/jpeg" onchange="showPreview()" required>
+                        <div class="text-center mt-5">
+                            <button type="submit" class="btn btn-success btn-primary">Submit</button>
                         </div>
                     </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Send message</button>
+                    <br>
+                    <div class="text-center w-50">
+                        <img src="/img/avatars/Ha-Lan.png" id="image" class="img-fluid rounded" width="200" height="200" >
+                    </div>
                 </div>
             </div>
-        </div>
+        </main>
+
+        <footer class="footer">
+            <div class="container-fluid">
+                <div class="row text-muted">
+                    <div class="col-6 text-start">
+                        <p class="mb-0">
+
+                        </p>
+                    </div>
+                    <div class="col-6 text-end">
+                        <ul class="list-inline">
+                            <li class="list-inline-item">
+                                <a class="text-muted" href="" target="_blank">Support</a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a class="text-muted" href="" target="_blank">Help Center</a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a class="text-muted" href="" target="_blank">Privacy</a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a class="text-muted" href="" target="_blank">Terms</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </footer>
     </div>
-</body>
+</div>
+
+<script src="/js/app.js"></script>
+<script src="/js/my.js"></script>
 <script>
-    $('#exampleModal').on('show.bs.modal', function (event) {
-        const button = $(event.relatedTarget); // Button that triggered the modal
-        const recipient = button.data('whatever'); // Extract info from data-* attributes
-        // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-        // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
-        const modal = $(this);
-        modal.find('.modal-title').text('New message to ' + recipient)
-        modal.find('.modal-body input').val(recipient)
-    })
+    if ( window.history.replaceState ) {
+        window.history.replaceState( null, null, window.location.href );
+    }
 </script>
+
+</body>
+
 </html>

@@ -137,3 +137,16 @@ body {
         font-size: 14px;
     }
 }
+
+.hide{
+    display:none;
+}
+
+.show{
+    display:block;
+}
+
+.img-sample{
+    width: 10%;
+    height: auto;
+}
