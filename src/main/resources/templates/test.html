@@ -17,6 +17,8 @@
     <link href="/css/app.css" rel="stylesheet">
     <link href="/css/general.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+
 </head>
 
 <body>
@@ -68,14 +70,14 @@
                 <div class="d-flex justify-content-center">
                     <form class="form-control w-50" th:action="@{/test}" th:method="post" enctype="multipart/form-data">
                         <label for="formFile" class="form-label">Default file input example</label>
-                        <input class="form-control" type="file" name="image" id="formFile" accept="image/png, image/jpeg" onchange="showPreview()" required>
+                        <input class="form-control" type="file" name="image" id="formFile" accept="image/png, image/jpeg" onchange="showPreview(event)" required>
                         <div class="text-center mt-5">
                             <button type="submit" class="btn btn-success btn-primary">Submit</button>
                         </div>
                     </form>
                     <br>
                     <div class="text-center w-50">
-                        <img src="/img/avatars/Ha-Lan.png" id="image" class="img-fluid rounded" width="200" height="200" >
+                        <img src="/img/avatars/Ha-Lan.png" id="image-preview" class="img-fluid rounded" width="200" height="200" >
                     </div>
                 </div>
             </div>
@@ -112,13 +114,22 @@
 </div>
 
 <script src="/js/app.js"></script>
-<script src="/js/my.js"></script>
+
 <script>
     if ( window.history.replaceState ) {
         window.history.replaceState( null, null, window.location.href );
     }
 </script>
+<script type="text/javascript">
+    function showPreview(event) {
+        if (event.target.files.length > 0) {
+            var src = URL.createObjectURL(event.target.files[0]);
+            var preview = document.getElementById("image-preview");
+            preview.src = src;
 
+        }
+    }
+</script>
 </body>
 
 </html>

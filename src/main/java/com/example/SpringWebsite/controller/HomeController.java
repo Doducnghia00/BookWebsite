@@ -2,7 +2,10 @@ package com.example.SpringWebsite.controller;
 
 
 import com.example.SpringWebsite.model.Account;
+import com.example.SpringWebsite.model.BookEntity;
+import com.example.SpringWebsite.model.Category;
 import com.example.SpringWebsite.repository.AccountRepository;
+import com.example.SpringWebsite.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,6 +26,7 @@ import java.nio.file.StandardCopyOption;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -34,15 +38,22 @@ public class HomeController {
     final
     AccountRepository accountRepository;
 
-    public HomeController(AccountRepository accountRepository) {
+    final
+    BookRepository bookRepository;
+
+    public HomeController(AccountRepository accountRepository, BookRepository bookRepository) {
         this.accountRepository = accountRepository;
+        this.bookRepository = bookRepository;
     }
 
 
 
     @GetMapping("/")
-    public String Home(HttpSession session){
+    public String Home(HttpSession session,Model model ){
         System.out.println("GET HOME");
+        List<BookEntity> books = bookRepository.findAll();
+        model.addAttribute("books", books);
+
 
         return "index";
     }
@@ -185,28 +196,8 @@ public class HomeController {
 
     }
 
-    @GetMapping("/test")
-    public String Test(){
-        System.out.println("GET TEST");
-        return "test";
-    }
-    @PostMapping("/test")
-    public String postTest(@RequestParam("image") MultipartFile image){
-        System.out.println("POST TEST");
 
-//        Path path = Paths.get("/uploads");
-        Path path = Paths.get("E:\\WebImg");
-        if(image.isEmpty()){
-            return "index";
-        }
-        try{
-            InputStream inputStream = image.getInputStream();
-            Files.copy(inputStream,path.resolve(image.getOriginalFilename()), StandardCopyOption.REPLACE_EXISTING);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        return "/test";
-    }
+
 
 
 

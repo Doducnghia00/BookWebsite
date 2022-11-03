@@ -31,4 +31,8 @@ function showPreview(event){
     }
 }
 
+function SelectImage(){
+    document.getElementById("formFile").click();
+}
+
 
