@@ -5,6 +5,8 @@ function enterEditMode(){
     document.getElementById("fullName").disabled = false;
     document.getElementById("email").disabled = false;
     document.getElementById("dateOfBirth").disabled = false;
+
+
 }
 
 function exitEditMode(){

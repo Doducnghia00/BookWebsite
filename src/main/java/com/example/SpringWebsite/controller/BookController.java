@@ -56,15 +56,19 @@ public class BookController {
         if(id.equals("add")) {
             System.out.println("GET ADD BOOK");
             BookEntity book = new BookEntity();
+
             model.addAttribute("book", book);
             return "book-info";
         }
+
 
         System.out.println("GET BOOK" );
         System.out.println("    ID BOOK = " + id);
         model.addAttribute("id", id);
         BookEntity book = bookRepository.findById(Integer.valueOf(id)).get();
         System.out.println( "   Path:" +book.getBookCoverPath());
+        String bookId = book.getId() +"";
+        model.addAttribute("idBook", bookId);
         model.addAttribute("book", book);
         return "book-info";
     }
@@ -78,10 +82,19 @@ public class BookController {
         if(Objects.equals(book.getTitle(), "") || Objects.equals(book.getAuthor(), "")
                 || Objects.equals(book.getReleaseDate(), "")) {
             System.out.println("HAVE ERRORS");
-            model.addAttribute("book", book);
+//            BookEntity foundBook = bookRepository.findById(book.getId()).get();
+//            book.setImage(foundBook.getImage());
+//            model.addAttribute("book", book);
             model.addAttribute("messageTitle",Objects.equals(book.getTitle().trim(),"") ? "This field cannot be empty" : null );
             model.addAttribute("messageAuthor",Objects.equals(book.getAuthor().trim(),"") ? "This field cannot be empty" : null );
             model.addAttribute("messageReleaseDate",Objects.equals(book.getReleaseDate().trim(),"") ? "This field cannot be empty" : null );
+            if(book.getId()!=null){
+                BookEntity foundBook = bookRepository.findById(book.getId()).get();
+                book.setImage(foundBook.getImage());
+            }
+            List<Category> categoryList  = categoryRepository.findAll(Sort.by(Sort.Direction.ASC, "name"));
+            model.addAttribute("categoryList", categoryList);
+            model.addAttribute("book", book);
             return "book-info";
         } else {
             book.setTitle(book.getTitle().trim());
@@ -91,8 +104,20 @@ public class BookController {
 
         // Processing image file
         if(bookCover.isEmpty()){
+//            model.addAttribute("book",book);
+//            return "book-info";
 
-            return "book-info";
+            //save book
+//            id = "add";
+//            model.addAttribute("id", id);
+            if(book.getId()!=null){
+                BookEntity foundBook = bookRepository.findById(book.getId()).get();
+                book.setImage(foundBook.getImage());
+            }
+
+            System.out.println("    SAVE BOOK "+ book.toString());
+            BookEntity currentBook =  bookRepository.save(book);
+            return "redirect:/";
         }else{
 
             //Save image name
@@ -119,13 +144,14 @@ public class BookController {
             }catch (Exception e){
                 e.printStackTrace();
             }
+            return "redirect:/";
         }
 
 
 
 
 
-        return "redirect:/";
+//        return "redirect:/";
     }
 
     //Not working
