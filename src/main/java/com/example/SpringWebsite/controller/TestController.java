@@ -1,7 +1,9 @@
 package com.example.SpringWebsite.controller;
 
+import com.example.SpringWebsite.model.TestModel;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -48,20 +50,17 @@ public class TestController {
         return "test";
     }
 
-//    public String postTest(@RequestParam("image") MultipartFile image){
-//        System.out.println("POST TEST");
-//
-////        Path path = Paths.get("/uploads");
-//        Path path = Paths.get("E:\\WebImg");
-//        if(image.isEmpty()){
-//            return "index";
-//        }
-//        try{
-//            InputStream inputStream = image.getInputStream();
-//            Files.copy(inputStream,path.resolve(image.getOriginalFilename()), StandardCopyOption.REPLACE_EXISTING);
-//        }catch (Exception e){
-//            e.printStackTrace();
-//        }
-//        return "/test";
-//    }
+    @PostMapping("/test1")
+    public String Test1(@ModelAttribute("formTest1")TestModel testModel){
+        if(testModel != null){
+            System.out.println(testModel.getAccount().getUsername());
+            System.out.println(testModel.getCategory().getName());
+        }else{
+            System.out.println("null");
+        }
+
+        return "/test";
+    }
+
+
 }

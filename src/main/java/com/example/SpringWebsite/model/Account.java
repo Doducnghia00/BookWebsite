@@ -19,30 +19,43 @@ public class Account {
     private String dateOfBirth;
     private String note;
 
+    private  int role;
+
     public Account() {
     }
 
 
 
-    public Account(String username, String password, String email) {
+    public Account(String username, String password, String email, int role) {
         this.username = username;
         this.password = password;
         this.email = email.toLowerCase();
+        this.role = role;
     }
 
-    public Account(String username, String password, String email, String fullName, String dateOfBirth, String note) {
+    public Account(String username, String password, String email, String fullName, String dateOfBirth, String note, int role) {
         this.username = username;
         this.password = password;
         this.email = email.toLowerCase();
         this.fullName = fullName;
         this.dateOfBirth = dateOfBirth;
         this.note = note;
+        this.role = role;
     }
-    public Account(String username, String password, String email, String fullName) {
+    public Account(String username, String password, String email, String fullName, int role) {
         this.username = username;
         this.password = password;
         this.email = email.toLowerCase();
         this.fullName = fullName;
+        this.role = role;
+    }
+
+    public int getRole() {
+        return role;
+    }
+
+    public void setRole(int role) {
+        this.role = role;
     }
 
     public Long getId() {

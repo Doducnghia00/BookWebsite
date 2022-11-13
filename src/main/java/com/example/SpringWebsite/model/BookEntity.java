@@ -27,6 +27,10 @@ public class BookEntity {
 
 	private String image;
 
+	private float rate;
+
+
+
 	public String getAuthor() {
 		return author;
 	}
@@ -37,6 +41,13 @@ public class BookEntity {
 
 	private String author;
 
+	public float getRate() {
+		return rate;
+	}
+
+	public void setRate(float rate) {
+		this.rate = rate;
+	}
 
 	public BookEntity() {
 		super();
@@ -44,7 +55,7 @@ public class BookEntity {
 	}
 
 	public BookEntity(Integer id, String title, String releaseDate, String category, String description, Integer page,
-					  String image, String author) {
+					  String image, float rate, String author) {
 		super();
 		this.id = id;
 		this.title = title;
@@ -53,6 +64,7 @@ public class BookEntity {
 		this.description = description;
 		this.page = page;
 		this.image = image;
+		this.rate = rate;
 		this.author = author;
 	}
 
