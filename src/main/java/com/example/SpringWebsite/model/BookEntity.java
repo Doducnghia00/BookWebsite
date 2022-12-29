@@ -1,6 +1,7 @@
 package com.example.SpringWebsite.model;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "book")
@@ -11,6 +12,10 @@ public class BookEntity {
 
 	@Column(nullable = false)
 	private String title;
+
+	@OneToMany(cascade = CascadeType.PERSIST)
+	private List<Review> reviewList;
+
 
 
 	private String releaseDate;
@@ -30,8 +35,42 @@ public class BookEntity {
 	private float rate;
 
 	private double price;
+	@Column
+	private Float bookRate = Float.valueOf(0);
 
 
+
+	public Float getBookRate() {
+		return bookRate;
+	}
+
+	public void setBookRate(Float bookRate) {
+		this.bookRate = bookRate;
+	}
+
+	public BookEntity(Integer id, String title, List<Review> reviewList, String releaseDate, String category, String description, Integer page, String image, float rate, double price, Float bookRate, List<Review> reviewList1, String author) {
+		this.id = id;
+		this.title = title;
+		this.reviewList = reviewList;
+		this.releaseDate = releaseDate;
+		this.category = category;
+		this.description = description;
+		this.page = page;
+		this.image = image;
+		this.rate = rate;
+		this.price = price;
+		this.bookRate = bookRate;
+		this.reviewList = reviewList1;
+		this.author = author;
+	}
+
+	public List<Review> getReviewList() {
+		return reviewList;
+	}
+
+	public void setReviewList(List<Review> reviewList) {
+		this.reviewList = reviewList;
+	}
 
 	public String getAuthor() {
 		return author;

@@ -98,51 +98,39 @@
                 </div>
 
                 <!-- An Order -->
-                <div class="row d-flex justify-content-center">
+                <div th:each="purchase : ${purchases}" th:unless="${purchases == null}" class="row d-flex justify-content-center">
                     <div class="card w-75">
 
                         <!-- ID order and status -->
                         <div class="row mt-2">
-                            <div class="col-8 d-flex ">
-                                ID: 2312
+                            <div  class="col-8 d-flex ">
+                                ID: <span th:text="${purchase.id}">2312</span>
                             </div>
                             <div class="col-4 d-flex flex-row-reverse ">
-                                Completed
+                                <span th:if="${purchase.status} == -1">Cancelled</span>
+                                <span th:if="${purchase.status} == 1">Pending</span>
+                                <span th:if="${purchase.status} == 2">To Ship</span>
+                                <span th:if="${purchase.status} == 3">Completed</span>
                             </div>
                         </div>
                         <!-- ID order and status -->
 
                         <!-- Item row -->
-                        <div class="row item-row mb-2 ">
+                        <div th:each="item : ${items}" th:if=" ${item.purchase} == ${purchase}" class="row item-row mb-2 ">
                             <hr>
                             <div class="col-1 ">
-                                <img class="w-75 mw-100" src="/img/photos/book_cover_sample.jpg" alt="">
+                                <img class="w-75 mw-100" th:src="@{${item.book.getBookCoverPath()}}" alt="">
                             </div>
                             <div class="col-10">
-                                <h5>Who You Are?</h5>
-                                <p>Quantity: 2</p>
+                                <h5 th:text="${item.book.title}">Who You Are?</h5>
+                                <p>Quantity: <span th:text="${item.quantity}">2</span></p>
                             </div>
                             <div class="col-1">
-                                <p class="d-flex flex-row-reverse align-items-end">$30</p>
+                                <p class="d-flex flex-row-reverse align-items-end">$<span th:text="${item.price}">30</span></p>
                             </div>
                         </div>
                         <!-- Item row -->
 
-                        <!-- Item row -->
-                        <div class="row item-row mb-2 ">
-                            <hr>
-                            <div class="col-1 ">
-                                <img class="w-75 mw-100" src="/img/photos/book_cover_sample.jpg" alt="">
-                            </div>
-                            <div class="col-10">
-                                <h5>Who You Are?</h5>
-                                <p>Quantity: 2</p>
-                            </div>
-                            <div class="col-1">
-                                <p class="d-flex flex-row-reverse align-items-end">$30</p>
-                            </div>
-                        </div>
-                        <!-- Item row -->
 
                         <!-- Many items.... -->
                         <!-- ... -->
@@ -153,13 +141,19 @@
                         <div class="row total">
                             <hr>
                             <div class="col-8">
-
+                                <div class="row ms-2">
+                                    <p>Payment Method: <span th:text="${purchase.payMethod}"></span></p>
+                                </div>
+                                <div class="row ms-2">
+                                    <p>Ship to: <span th:text="${purchase.deliveryAddress}"></span></p>
+                                </div>
                             </div>
                             <div class="col-4 ">
-                                <h4 class="d-flex justify-content-end me-2">Order Total: $30</h4>
-                                <div class="row">
-                                    <button class="col btn btn-secondary ms-2 me-2">Details</button>
-                                    <button class="col btn btn-danger ms-2 me-2">Cancel Order</button>
+                                <h4 class="d-flex justify-content-end me-2">Order Total: $<span th:text="${purchase.totalAmount}">30</span></h4>
+                                <div class="row d-flex justify-content-end">
+<!--                                    <button class="col btn btn-secondary ms-2 me-2">Details</button>-->
+                                    <a th:href="@{purchase/cancel/{id}(id=${purchase.id})}" onclick="return confirm('Do you want to cancel this order?')" class="w-50 btn btn-danger ms-2 me-2" th:if="${purchase.status} == 1">Cancel Order</a>
+                                    <a th:href="@{purchase/cancel/{id}(id=${purchase.id})}" onclick="return confirm('Do you want to delete this order?')" class="w-50 btn btn-danger ms-2 me-2" th:if="${purchase.status} == 2">Cancel Order</a>
                                 </div>
                             </div>
                         </div>
@@ -169,77 +163,7 @@
                 </div>
                 <!-- An Order -->
 
-                <!-- An Order -->
-                <div class="row d-flex justify-content-center">
-                    <div class="card w-75">
 
-                        <!-- ID order and status -->
-                        <div class="row mt-2">
-                            <div class="col-8 d-flex ">
-                                ID: 2312
-                            </div>
-                            <div class="col-4 d-flex flex-row-reverse ">
-                                Completed
-                            </div>
-                        </div>
-                        <!-- ID order and status -->
-
-                        <!-- Item row -->
-                        <div class="row item-row mb-2 ">
-                            <hr>
-                            <div class="col-1 ">
-                                <img class="w-75 mw-100" src="/img/photos/book_cover_sample.jpg" alt="">
-                            </div>
-                            <div class="col-10">
-                                <h5>Who You Are?</h5>
-                                <p>Quantity: 2</p>
-                            </div>
-                            <div class="col-1">
-                                <p class="d-flex flex-row-reverse align-items-end">$30</p>
-                            </div>
-                        </div>
-                        <!-- Item row -->
-
-                        <!-- Item row -->
-                        <div class="row item-row mb-2 ">
-                            <hr>
-                            <div class="col-1 ">
-                                <img class="w-75 mw-100" src="/img/photos/book_cover_sample.jpg" alt="">
-                            </div>
-                            <div class="col-10">
-                                <h5>Who You Are?</h5>
-                                <p>Quantity: 2</p>
-                            </div>
-                            <div class="col-1">
-                                <p class="d-flex flex-row-reverse align-items-end">$30</p>
-                            </div>
-                        </div>
-                        <!-- Item row -->
-
-                        <!-- Many items.... -->
-                        <!-- ... -->
-                        <!-- Many items.... -->
-
-
-                        <!-- Total row -->
-                        <div class="row total">
-                            <hr>
-                            <div class="col-8">
-
-                            </div>
-                            <div class="col-4 ">
-                                <h4 class="d-flex justify-content-end me-2">Order Total: $30</h4>
-                                <div class="row">
-                                    <button class="col btn btn-secondary ms-2 me-2">Details</button>
-                                    <button class="col btn btn-danger ms-2 me-2">Cancel Order</button>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Total row -->
-
-                    </div>
-                </div>
-                <!-- An Order -->
             </div>
         </main>
 

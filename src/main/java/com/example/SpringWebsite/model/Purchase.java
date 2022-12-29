@@ -13,6 +13,7 @@ public class Purchase {
     @JoinColumn(name = "account_id")
     private Account account;
     private String payMethod;
+    private String note;
     private String deliveryAddress;
     private double totalAmount;
 
@@ -32,10 +33,11 @@ public class Purchase {
     public Purchase() {
     }
 
-    public Purchase(Integer id, Account account, String payMethod, String deliveryAddress, double totalAmount, int status) {
+    public Purchase(Integer id, Account account, String payMethod, String note, String deliveryAddress, double totalAmount, int status) {
         this.id = id;
         this.account = account;
         this.payMethod = payMethod;
+        this.note = note;
         this.deliveryAddress = deliveryAddress;
         this.totalAmount = totalAmount;
         this.status = status;
@@ -46,6 +48,14 @@ public class Purchase {
 
     public void setAccount(Account account) {
         this.account = account;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
     }
 
     public int getStatus() {

@@ -1,4 +1,4 @@
-document.getElementById("showCart").style.display="none";
+//document.getElementById("showCart").style.display="none";
 //General
 let cart = [];
 
@@ -29,7 +29,7 @@ function showMyCard(){
             '                            <!-- Data -->\n' +
             '                            <b class=""  style="font-size: 0.8rem" >'+ cart[i][2] +'</b>\n' +
             '                            <p style="font-size: 0.8rem">Price: $'+ cart[i][3] +'</p>\n' +
-            '                            <button type="button" class="btn btn-secondary btn-sm me-1 mb-2"\n' +
+            '                            <button type="button" onclick="removeItem(this)" class="btn btn-secondary btn-sm me-1 mb-2"\n' +
             '                                    data-mdb-toggle="tooltip" title="Remove item" style="font-size: 0.8rem" >\n' +
             '                                <i class="" data-feather="trash-2">Remove</i>\n' +
             '                            </button>\n' +
@@ -70,16 +70,36 @@ function showCart(){
 
 }
 function addToCard(btAdd){
+
+    if(sessionStorage.getItem("myCart") != null){
+        let myCart = sessionStorage.getItem("myCart");
+        cart = JSON.parse(myCart);
+    }
+
+
     const item = btAdd.parentElement.parentElement.parentElement.children;
     let idBook = item[0].innerText;
     let img = item[1].children[0].src;
     let title = item[2].innerText;
     let price = item[5].children[0].innerText;
-    let quantity = btAdd.parentElement.children[0].value;
+    let quantity = parseInt(btAdd.parentElement.children[0].value);
 
     let s = idBook +" "+ img +" "+ title +" "+ price +" "+ quantity;
     let book = [idBook,img, title,price,quantity];
-    cart.push(book);
+
+    //Does the product already exist?
+    let check = 0;
+    for (let i = 0; i < cart.length; i++) {
+        if(cart[i][2] === title){
+            cart[i][4] += quantity;
+            check = 1;
+            break;
+        }
+    }
+    if(check === 0){
+        cart.push(book);
+    }
+
     console.log(cart);
 
     //alert(s);
@@ -107,7 +127,25 @@ function addToCard(btAdd){
 
 }
 
-function RemoveItem(id){
+function removeItem(btRemove){
+    let myCart = sessionStorage.getItem("myCart");
+    let cart = JSON.parse(myCart);
+
+    let row = btRemove.parentElement.parentElement;
+    let title = row.children[1].children[0].innerText;
+    console.log("Remove " +title);
+    for (let i = 0; i < cart.length; i++) {
+        if(cart[i][2] === title){
+            cart.splice(i,1);
+        }
+    }
+    row.remove();
+    //save to session
+    sessionStorage.clear();
+    sessionStorage.setItem("myCart",JSON.stringify(cart));
+
+    showMyCard();
+
 
 }
 
@@ -161,6 +199,7 @@ function showItem(){
     document.getElementById("myCart").innerHTML = y;
     document.getElementById("totalProduct").innerText = total +'';
     document.getElementById("totalAmount").innerText = total + 2 +'';
+    document.getElementById("totalAmount1").value = total + 2;
 }
 
 //Checkout page
@@ -170,27 +209,49 @@ function buy(){
     let selectProvince = document.getElementById("selectProvince").value;
     let selectDistrict = document.getElementById("selectDistrict").value;
     document.getElementById("deliveryAddress").value = address + selectDistrict + selectProvince;
-    document.getElementById("totalAmount1").value = document.getElementById("totalAmount").value;
 
-    //send item
-    let xhr = new XMLHttpRequest();
-    let url = "/add-item";
-    xhr.open("POST",url, true);
-    xhr.setRequestHeader("Content-Type", "application/json");
 
-    // xhr.onreadystatechange = function () {
-    //     if (xhr.readyState === 4 && xhr.status === 200) {
-    //         result.innerHTML = this.responseText;
-    //     }
-    // };
+    let payMethod = "";
+    let note = "0"
+    if(document.getElementById("CashOnDelivery").checked === true){
+        payMethod = "Cash On Delivery"
+    }else{
+        payMethod = "Cash On Credit Card"
+        note = document.getElementById("cvc-credit").value;
+    }
+    let deliveryAddress = address + " " + selectDistrict + " Ma Thanh Pho " + selectProvince  ;
+    let total = document.getElementById("totalAmount1").value;
+    console.log(total);
+    let payInfo = [payMethod,note,deliveryAddress,total];
+
+
+
 
     let myCart = sessionStorage.getItem("myCart");
     let cart = JSON.parse(myCart);
-    let data = cart;
-    xhr.send(data);
+
+    let purchase = String(payInfo) + "," + String(cart);
+    console.log("MyCart " +myCart);
+    console.log("cart " +cart);
 
 
-    document.getElementById("form-checkout").submit();
+    //${pageContext.request.contextPath}}/purchase/add
+
+    $.ajax({
+        type : "post",
+        url : "/checkout",
+        cache: false,
+        dataType: 'application/json',
+        contentType: 'application/json; charset=utf-8',
+        data: purchase,
+        success: function (response){
+            $('#result').html(response.data);
+        }
+    })
+
+    //document.getElementById("form-checkout").submit();
+    sessionStorage.clear();
+    document.getElementById("redirect").click();
 }
 
 

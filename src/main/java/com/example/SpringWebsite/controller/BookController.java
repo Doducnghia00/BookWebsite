@@ -174,6 +174,11 @@ public class BookController {
         return "redirect:/";
     }
 
+    @GetMapping("/{id}")
+    public String detailBook(@PathVariable String id){
+        return "test";
+    }
+
 
 
 }

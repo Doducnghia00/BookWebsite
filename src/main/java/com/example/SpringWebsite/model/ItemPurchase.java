@@ -14,7 +14,7 @@ public class ItemPurchase {
     private BookEntity book;
 
     @ManyToOne
-    @JoinColumn(name = "cart_id")
+    @JoinColumn(name = "purchase_id")
     private Purchase purchase;
 
     private int quantity;
@@ -47,11 +47,11 @@ public class ItemPurchase {
         this.price = price;
     }
 
-    public Purchase getCart() {
+    public Purchase getPurchase() {
         return purchase;
     }
 
-    public void setCart(Purchase purchase) {
+    public void setPurchase(Purchase purchase) {
         this.purchase = purchase;
     }
 
