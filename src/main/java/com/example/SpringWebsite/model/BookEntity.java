@@ -29,6 +29,8 @@ public class BookEntity {
 
 	private float rate;
 
+	private double price;
+
 
 
 	public String getAuthor() {
@@ -55,7 +57,7 @@ public class BookEntity {
 	}
 
 	public BookEntity(Integer id, String title, String releaseDate, String category, String description, Integer page,
-					  String image, float rate, String author) {
+					  String image, float rate, double price, String author) {
 		super();
 		this.id = id;
 		this.title = title;
@@ -65,6 +67,7 @@ public class BookEntity {
 		this.page = page;
 		this.image = image;
 		this.rate = rate;
+		this.price = price;
 		this.author = author;
 	}
 
@@ -122,6 +125,14 @@ public class BookEntity {
 
 	public void setImage(String image) {
 		this.image = image;
+	}
+
+	public double getPrice() {
+		return price;
+	}
+
+	public void setPrice(double price) {
+		this.price = price;
 	}
 
 	@Override

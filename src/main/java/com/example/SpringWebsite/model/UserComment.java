@@ -12,12 +12,13 @@ public class UserComment {
     private String comment;
 
     @ManyToOne
+    @JoinColumn(name = "book_id")
+    private BookEntity book;
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private Account user;
 
-    @ManyToOne
-    @JoinColumn(name = "book_id")
-    private BookEntity book;
+
 
     public UserComment() {
     }

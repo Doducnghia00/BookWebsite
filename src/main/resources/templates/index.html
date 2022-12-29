@@ -39,6 +39,9 @@
                 </ul>
 
                 <ul class="navbar-nav navbar-align ">
+                    <li class="nav-item d-flex align-items-center">
+                        <a class="dropdown-item" onclick="showCart()" th:if="${session.fullName != null}"><i class="align-middle me-1" data-feather="shopping-cart"></i></a>
+                    </li>
 
                     <li class="nav-item dropdown">
                         <a class="nav-icon dropdown-toggle d-inline-block d-sm-none" href="#" data-bs-toggle="dropdown">
@@ -50,7 +53,8 @@
                             <span class="text-dark" th:text="Guest" th:unless="${session.fullName != null}"></span>
                         </a>
                         <div th:if="${session.fullName != null}" class="dropdown-menu dropdown-menu-end">
-                            <a class="dropdown-item" href="/profile"><i class="align-middle me-1" data-feather="user"></i> Profile</a>
+                            <a class="dropdown-item" href="/profile"><i class="align-middle me-1" data-feather="user"></i>Profile</a>
+                            <a class="dropdown-item" href="/purchase"><i class="align-middle me-1" data-feather="shopping-bag"></i>My Purchase</a>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="/login">Logout</a>
                         </div>
@@ -61,64 +65,72 @@
                 </ul>
             </div>
         </nav>
+        <div class="showCart" id="showCart">
+            <div class="card mb-4 d-flex justify-content-end">
+                <div class="card-header py-3 text-center">
+                    <h5 class="mb-0 card-title" th:text="Cart">Cart</h5>
+                </div>
+                <div class="card-body" id="myCart" style="background-color: white">
+
+                </div>
+            </div>
+        </div>
 
         <main class="content">
-            <div class="container-fluid p-0">
+            <div class="container-fluid p-0 ">
 
-                <div class="row">
-                    <div class="col-8 ">
-                        <h1>List Books</h1>
-                    </div>
-                    <div class=" col-4 d-flex justify-content-end align-items-center ">
-                        <a th:href="@{/book/add}" class="btn btn-success d-flex justify-content-end " th:unless="${session.username == null}">ADD BOOK</a>
+                <div class="row d-flex justify-content-center">
+                    <div class="row " th:classappend="${role == 1} ? 'w-75' : 'w-75' ">
+                        <div class="col-8 ">
+                            <h1>List Books</h1>
+                        </div>
+                        <div class=" col-4 d-flex justify-content-end align-items-center ">
+                            <a th:href="@{/book/add}" class="btn btn-success d-flex justify-content-end " th:if="${role == 1}">ADD BOOK</a>
+                        </div>
                     </div>
                 </div>
 
 
-                <div class="row">
+                <div class="row  d-flex justify-content-center">
 
 
-                    <table class="table table-striped table-bordered w-100">
+                    <table class="table table-striped table-bordered table-hover" th:classappend="${role == 1} ? 'w-75' : 'w-75' ">
 
                         <thead class="table-dark">
                         <tr class="text-center ">
-                            <th class="col-1">ID</th>
-                            <th class="col-2">TITLE</th>
-                            <th class="col-1">AUTHOR</th>
-                            <th class="col-1">CATEGORY</th>
-                            <th class="col-1">RELEASE DATE</th>
-                            <th class="col-1">PAGE</th>
-<!--                            <th class="col-2">DESCRIPTION</th>-->
-                            <th class="col-2">Action</th>
+                            <th class="col">ID</th>
+                            <th class="col-2">BOOK COVER</th>
+                            <th class="col">TITLE</th>
+                            <th class="col">AUTHOR</th>
+                            <th class="col">CATEGORY</th>
+                            <th class="col">PRICE</th>
+                            <th class="col-2" th:if="${session.username != null}">Action</th>
 
-<!--                            <th class="col">ID</th>-->
-<!--                            <th class="col-2">TITLE</th>-->
-<!--                            <th class="col">AUTHOR</th>-->
-<!--                            <th class="col">CATEGORY</th>-->
-<!--                            <th class="col">RELEASE DATE</th>-->
-<!--                            <th class="col">PAGE</th>-->
-<!--                            <th class="col-3">DESCRIPTION</th>-->
-<!--                            <th class="col-2">Action</th>-->
                         </tr>
                         </thead>
 
                         <tbody>
 
-                        <tr th:each = "book: ${books}" th:unless="${books == null}" class="">
-                            <td th:text="${book.id}"></td>
-                            <td th:text="${book.title}"></td>
-                            <td th:text="${book.author}"></td>
-                            <td th:text="${book.category}"></td>
-                            <td th:text="${book.releaseDate}"></td>
-                            <td th:text="${book.page}"></td>
-<!--                            <td th:text="${book.description}"></td>-->
+                        <tr th:each = "book: ${books}" th:unless="${books == null}" class="item" >
+                            <td  th:text="${book.id}" th:onclick=" |window.location.href= '/book/${book.id}'| "></td>
+                            <td class="d-flex justify-content-center"><img th:src="@{${book.getBookCoverPath()}}" id="image-preview" class="" width="50px" height="75px" th:onclick=" |window.location.href= '/book/${book.id}'| "></td>
+                            <td th:text="${book.title}" th:onclick=" |window.location.href= '/book/${book.id}'| "></td>
+                            <td th:text="${book.author}" th:onclick=" |window.location.href= '/book/${book.id}'| "></td>
+                            <td th:text="${book.category}" th:onclick=" |window.location.href= '/book/${book.id}'| "></td>
+                            <td th:onclick=" |window.location.href= '/book/${book.id}'| ">$<span th:text="${book.price}"></span></td>
 
-                            <td>
-                                <div class="row justify-content-around">
+                            <td th:if="${session.username != null}">
+                                <div class="row justify-content-around d-flex justify-content-center d-inline-block">
+<!--                                    <button th:onclick="| window.location.href='/add-purchase-item/${book.id}' |"-->
+<!--                                       class="btn btn-success col m-1  "  th:if="${session.role == 0}"><i class="align-middle me-1" data-feather="shopping-cart"></i></button>-->
+                                    <input type="number" class="form-control col m-1 text-center" min="1" max="20" value="1" th:if="${session.role == 0}" onchange="checkQuantity(this)"/>
+                                    <button onclick="addToCard(this)"
+                                            class="btn btn-success col m-1  "  th:if="${session.role == 0}"><i class="align-middle me-1" data-feather="shopping-cart"></i></button>
                                     <a th:href="@{book/{id}(id=${book.id})}"
-                                       class="btn btn-success col-4 mx-auto" th:unless="${session.username == null}">View</a>
+                                       class="btn btn-success col m-1 " role="button" th:if="${session.role == 1}">View</a>
                                     <a th:href="@{delete/{id}(id=${book.id})}"
-                                       class="btn btn-danger col-4 mx-auto" th:unless="${session.username == null}" onclick="return confirm('Do you want to delete the book?')">Delete</a>
+                                       class="btn btn-danger col m-1 " role="button" th:if="${session.role == 1}" onclick="return confirm('Do you want to delete the book?')">Delete</a>
+
                                 </div>
                             </td>
                         </tr>
@@ -158,8 +170,21 @@
         </footer>
     </div>
 </div>
+<div style="text-align: center; margin-top: 50px;">
+    <div id="snackbar"></div>
+</div>
 
+<script>
+
+</script>
 <script src="/js/app.js"></script>
+<script src="/js/my.js"></script>
+<script>
+    function checkQuantity(x){
+        if(x.value > 99) x.value = 99;
+        if(x.value < 1) x.value = 1;
+    }
+</script>
 
 </body>
 

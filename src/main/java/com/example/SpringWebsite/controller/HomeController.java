@@ -3,29 +3,16 @@ package com.example.SpringWebsite.controller;
 
 import com.example.SpringWebsite.model.Account;
 import com.example.SpringWebsite.model.BookEntity;
-import com.example.SpringWebsite.model.Category;
 import com.example.SpringWebsite.repository.AccountRepository;
 import com.example.SpringWebsite.repository.BookRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.SpringWebsite.repository.ItemPurchaseRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
-import javax.servlet.http.Part;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.sql.Date;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
@@ -41,6 +28,9 @@ public class HomeController {
     final
     BookRepository bookRepository;
 
+
+
+
     public HomeController(AccountRepository accountRepository, BookRepository bookRepository) {
         this.accountRepository = accountRepository;
         this.bookRepository = bookRepository;
@@ -54,6 +44,20 @@ public class HomeController {
         List<BookEntity> books = bookRepository.findAll();
         model.addAttribute("books", books);
 
+        //Check Admin?
+        if (session.getAttribute("username") != null){
+            String username = (String) session.getAttribute("username");
+            int role = accountRepository.findByUsername(username).getRole();
+            model.addAttribute("role", role);
+            session.setAttribute("role",role);
+            System.out.println("    Role: " + role);
+        }else{
+            model.addAttribute("role", 0);
+            session.setAttribute("role",0);
+            System.out.println("    Role: " + 0);
+        }
+
+
 
         return "index";
     }
@@ -65,6 +69,8 @@ public class HomeController {
         model.addAttribute("error","");
         session.removeAttribute("username");
         session.removeAttribute("fullName");
+        session.removeAttribute("role");
+        session.invalidate();
 
 
         return "sign-in";
@@ -87,7 +93,9 @@ public class HomeController {
             System.out.println("    Login success: " + foundAccount.getUsername());
             session.setAttribute("username",foundAccount.getUsername());
             session.setAttribute("fullName",foundAccount.getFullName());
+            session.setAttribute("role", foundAccount.getRole());
             System.out.println("    Fullname:  "+ foundAccount.getFullName());
+
 
             return "redirect:/";
 

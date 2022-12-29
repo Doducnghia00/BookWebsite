@@ -165,7 +165,11 @@ public class BookController {
     }
 
     @GetMapping("delete/{id}")
-    public String delete(@PathVariable Integer id) {
+    public String delete(@PathVariable Integer id, HttpSession session) {
+        if (session.getAttribute("username") == null){
+            return "redirect:/";
+        }
+
         bookRepository.deleteById(id);
         return "redirect:/";
     }

@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="shortcut icon" href="/img/icons/book_icon.png" />
+
+
+
+    <title>Order Details</title>
+
+    <link href="/css/app.css" rel="stylesheet">
+    <link href="/css/general.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+<div class="wrapper">
+
+
+    <div class="main">
+
+        <nav class="navbar navbar-expand navbar-light navbar-bg">
+
+
+            <a class="sidebar-toggle js-sidebar-toggle"></a>
+
+
+
+            <div class="navbar-collapse collapse">
+                <ul class="navbar-nav navbar-align mx-auto ">
+                    <a class="navbar-brand brand" href="/">
+                        <img src="/img/photos/cover.png" alt="Library Online">
+                    </a>
+                </ul>
+
+                <ul class="navbar-nav navbar-align ">
+                    <li class="nav-item d-flex align-items-center">
+                        <a class="dropdown-item" onclick="showCart()" th:if="${session.fullName != null}"><i class="align-middle me-1" data-feather="shopping-cart"></i></a>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-icon dropdown-toggle d-inline-block d-sm-none" href="#" data-bs-toggle="dropdown">
+                            <i class="align-middle" data-feather="settings"></i>
+                        </a>
+                        <a class="nav-link dropdown-toggle d-none d-sm-inline-block" href="#" data-bs-toggle="dropdown">
+                            <img src="/img/avatars/Ngan.jpg" class="avatar img-fluid rounded me-1" alt="User's avatar" />
+                            <span class="text-dark" th:text="${session.fullName}" th:unless="${session == null}"></span>
+                            <span class="text-dark" th:text="Guest" th:unless="${session.fullName != null}"></span>
+                        </a>
+                        <div th:if="${session.fullName != null}" class="dropdown-menu dropdown-menu-end">
+                            <a class="dropdown-item" href="/profile"><i class="align-middle me-1" data-feather="user"></i>Profile</a>
+                            <a class="dropdown-item" href="/purchase"><i class="align-middle me-1" data-feather="shopping-bag"></i>My Purchase</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="/login">Logout</a>
+                        </div>
+                        <div th:if="${session.fullName == null}" class="dropdown-menu dropdown-menu-end">
+                            <a class="dropdown-item" href="/login">Login</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <main class="content">
+            <div class="container-fluid p-0 w-75">
+
+                <div class="row d-flex justify-content-center my-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="container mb-5 mt-3">
+                                <div class="row d-flex align-items-baseline">
+                                    <div class="col-xl-9">
+                                        <p style="color: #7e8d9f;font-size: 20px;">Invoice >> <strong>ID: #123-123</strong>
+                                        </p>
+                                    </div>
+                                    <div class="col-xl-3 float-end">
+                                        <a class="btn btn-light text-capitalize border-0" data-mdb-ripple-color="dark"><i
+                                                class="" data-feather="printer"></i> Print</a>
+                                        <a class="btn btn-light text-capitalize" data-mdb-ripple-color="dark"><i class=""
+                                                                                                                 data-feather="file-plus"></i> Export</a>
+                                    </div>
+                                    <hr>
+                                </div>
+
+                                <div class="container">
+                                    <div class="col-md-12">
+                                        <div class="text-center">
+                                            <!-- <i class="" data-feather="book-open" style="color:#5d9fc5 ;"></i> -->
+                                            <img src="/img/photos/book_logo.png" style="width: 10%">
+                                            <!-- <p class="pt-0">BookLibrary.com</p> -->
+                                        </div>
+
+                                    </div>
+
+
+                                    <div class="row">
+                                        <div class="col-xl-9">
+                                            <ul class="list-unstyled">
+                                                <li class="text-muted">To: <span style="color:#5d9fc5 ;">John Lorem</span>
+                                                </li>
+                                                <li class="text-muted">Street, City</li>
+                                                <li class="text-muted">State, Country</li>
+                                                <li class="text-muted"> <i class="" data-feather="phone"></i>
+                                                    123-456-789</li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-xl-3">
+                                            <p class="text-muted">Invoice</p>
+                                            <ul class="list-unstyled">
+                                                <li class="text-muted"><i class="" data-feather="play"
+                                                                          style="color:#84B0CA ;"></i>
+                                                    <span class="fw-bold">ID:</span>#123-456</li>
+                                                <li class="text-muted"><i class="" data-feather="play"
+                                                                          style="color:#84B0CA ;"></i>
+                                                    <span class="fw-bold">Creation Date: </span>Jun 23,2021</li>
+                                                <li class="text-muted"><i class="" data-feather="play"
+                                                                          style="color:#84B0CA ;"></i>
+                                                    <span class="me-1 fw-bold">Status:</span><span
+                                                            class="badge bg-warning text-black fw-bold">
+                                                    Unpaid</span></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                    <div class="row my-2 mx-1 justify-content-center">
+                                        <table class="table table-striped table-borderless">
+                                            <thead style="background-color:#84B0CA ;" class="text-white">
+                                            <tr>
+                                                <th scope="col">#</th>
+                                                <th scope="col">Description</th>
+                                                <th scope="col">Qty</th>
+                                                <th scope="col">Unit Price</th>
+                                                <th scope="col">Amount</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr>
+                                                <th scope="row">1</th>
+                                                <td>Sherlock Holmes</td>
+                                                <td>4</td>
+                                                <td>$5</td>
+                                                <td>$20</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">2</th>
+                                                <td>Who are you</td>
+                                                <td>1</td>
+                                                <td>$10</td>
+                                                <td>$10</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">3</th>
+                                                <td>Tsunami</td>
+                                                <td>1</td>
+                                                <td>$3</td>
+                                                <td>$3</td>
+                                            </tr>
+                                            </tbody>
+
+                                        </table>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xxl-9">
+                                            <p class="ms-3"></p>
+
+                                        </div>
+                                        <div class="col-xl-2">
+                                            <ul class="list-unstyled">
+                                                <li class="text-muted ms-3">
+                                                    <span class="text-black me-4">Products</span>$33
+                                                </li>
+                                                <li class="text-muted ms-3 mt-2"><span
+                                                        class="text-black me-4">Shipping</span>$2</li>
+                                            </ul>
+                                            <p class="text-black float-start"><span class="text-black me-3"> Total
+                                            </span><span style="font-size: 25px;">$35</span></p>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-xl-10">
+                                            <p>Thank you for your purchase</p>
+                                        </div>
+                                        <div class="col-xl-2">
+<!--                                            <button type="button" class="btn btn-primary text-capitalize"-->
+<!--                                                    style="background-color:#60bdf3 ;">Home</button>-->
+                                            <a href="/" class="btn btn-primary text-capitalize" style="background-color:#60bdf3 ;">Home</a>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+
+        <footer class="footer">
+            <div class="container-fluid">
+                <div class="row text-muted">
+                    <div class="col-6 text-start">
+                        <p class="mb-0">
+
+                        </p>
+                    </div>
+                    <div class="col-6 text-end">
+                        <ul class="list-inline">
+                            <li class="list-inline-item">
+
+                            </li>
+                            <li class="list-inline-item">
+
+                            </li>
+                            <li class="list-inline-item">
+
+                            </li>
+                            <li class="list-inline-item">
+
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+</div>
+
+<script src="/js/app.js"></script>
+
+</body>
+
+</html>

@@ -54,6 +54,9 @@
                 </ul>
 
                 <ul class="navbar-nav navbar-align ">
+                    <li class="nav-item d-flex align-items-center">
+                        <a class="dropdown-item" onclick="showCart()" th:if="${session.fullName != null}"><i class="align-middle me-1" data-feather="shopping-cart"></i></a>
+                    </li>
 
                     <li class="nav-item dropdown">
                         <a class="nav-icon dropdown-toggle d-inline-block d-sm-none" href="#" data-bs-toggle="dropdown">
@@ -65,7 +68,8 @@
                             <span class="text-dark" th:text="Guest" th:unless="${session.fullName != null}"></span>
                         </a>
                         <div th:if="${session.fullName != null}" class="dropdown-menu dropdown-menu-end">
-                            <a class="dropdown-item" href="/profile"><i class="align-middle me-1" data-feather="user"></i> Profile</a>
+                            <a class="dropdown-item" href="/profile"><i class="align-middle me-1" data-feather="user"></i>Profile</a>
+                            <a class="dropdown-item" href="/purchase"><i class="align-middle me-1" data-feather="shopping-bag"></i>My Purchase</a>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="/login">Logout</a>
                         </div>
@@ -126,7 +130,8 @@
                                         <td><p th:text="${messageReleaseDate}"  style="color:red;"/></td>
                                     </tr>
                                     <tr>
-                                        <td colspan="3"><label for="category">Category</label></td>
+                                        <td><label for="category">Category</label></td><td class="col-1"></td>
+                                        <td><label for="price">Price ($)</label></td>
 
                                     </tr>
                                     <tr>
@@ -140,6 +145,8 @@
                                         </select></td><td></td>
                                         <td>
                                             <input type="submit" id = "save_form" class="btn btn-success" value="Save" style="display: none">
+                                            <input type="number" step="0.01" class="form-control" id="price" name="price"
+                                                   th:value="${book.price}" th:readonly="${idBook != null}" />
                                         </td>
                                     </tr>
                                 </table>
@@ -231,6 +238,7 @@
         document.getElementById("page").readOnly = false;
         document.getElementById("category").disabled = false;
         document.getElementById("select_button").disabled = false;
+        document.getElementById("price").readOnly = false;
     }
 </script>
 
