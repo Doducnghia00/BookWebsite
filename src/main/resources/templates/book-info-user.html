@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link rel="shortcut icon" href="/img/icons/book_icon.png"/>
+
+
+  <title>Home</title>
+
+  <link href="/css/app.css" rel="stylesheet">
+  <link href="/css/general.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <style>
+    /* Chrome, Safari, Edge, Opera */
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    /* Firefox */
+    input[type=number] {
+      -moz-appearance: textfield;
+    }
+  </style>
+
+</head>
+
+<body>
+<div class="wrapper">
+
+
+  <div class="main">
+
+    <nav class="navbar navbar-expand navbar-light navbar-bg">
+
+
+      <a class="sidebar-toggle js-sidebar-toggle"></a>
+
+
+      <div class="navbar-collapse collapse">
+        <ul class="navbar-nav navbar-align mx-auto ">
+          <a class="navbar-brand brand" href="/">
+            <img src="/img/photos/cover.png" alt="Library Online">
+          </a>
+        </ul>
+
+        <ul class="navbar-nav navbar-align ">
+
+          <li class="nav-item dropdown">
+            <a class="nav-icon dropdown-toggle d-inline-block d-sm-none" href="#" data-bs-toggle="dropdown">
+              <i class="align-middle" data-feather="settings"></i>
+            </a>
+            <a class="nav-link dropdown-toggle d-none d-sm-inline-block" href="#" data-bs-toggle="dropdown">
+              <img src="/img/avatars/Ngan.jpg" class="avatar img-fluid rounded me-1" alt="User's avatar"/>
+              <span class="text-dark" th:text="${session.fullName}" th:unless="${session == null}"></span>
+              <span class="text-dark" th:text="Guest" th:unless="${session.fullName != null}"></span>
+            </a>
+            <div th:if="${session.fullName != null}" class="dropdown-menu dropdown-menu-end">
+              <a class="dropdown-item" href="/profile"><i class="align-middle me-1"
+                                                          data-feather="user"></i> Profile</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="/login">Logout</a>
+            </div>
+            <div th:if="${session.fullName == null}" class="dropdown-menu dropdown-menu-end">
+              <a class="dropdown-item" href="/login">Login</a>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <main class="content">
+      <div class="container-fluid p-0">
+        <div class="row justify-content-evenly">
+          <div class="col-4 d-flex justify-content-center">
+
+            <table>
+              <tr>
+                <input type="number" id="id" name="id"
+                       th:value="${book.id}" readonly style="display: none"/>
+                <td class="col-4"><label for="title">Title<span>*</span></label></td>
+                <td class="col-1"></td>
+                <td class="col-4"><label for="author">Author<span>*</span></label></td>
+              </tr>
+
+              <tr>
+                <!--                                        <td class="col-4"><input type="text" class="form-control" id="title" name="title" th:value="${book.title}" th:readonly="${idBook != null}"/></td><td></td>-->
+                <td class="col-4" id="title" th:text="${book.title}">
+                <td></td>
+                <td class="col-4" id="author" th:text="${book.author}">
+                  <!--                                            <input type="text" class="form-control" id="author" name="author" th:value="${book.author}"  th:readonly="${idBook != null}"/>-->
+
+                </td>
+              </tr>
+              <tr>
+                <td><p th:text="${messageTitle}" style="color:red;"/></td>
+                <td></td>
+                <td><p th:text="${messageAuthor}" style="color:red;"/></td>
+              </tr>
+
+
+              <tr>
+                <td><label for="releaseDate">Release Date<span>*</span></label></td>
+                <td></td>
+                <td><label for="page">Page</label></td>
+              </tr>
+              <tr>
+                <td id="releaseDate" th:text="${book.releaseDate}"></td>
+                <td></td>
+                <td id="page" th:text="${book.page}"></td>
+              </tr>
+              <tr>
+                <td><p th:text="${messageReleaseDate}" style="color:red;"/></td>
+              </tr>
+              <tr>
+                <td colspan="3"><label for="category">Category</label></td>
+
+              </tr>
+              <tr>
+                <!--                                        <td><input type="text" class="form-control" id="category" name="category"-->
+                <!--                                                   th:value="${book.category}" /></td><td></td>-->
+                <td id="category" th:text="${book.category}"></td>
+                <td></td>
+              </tr>
+            </table>
+
+          </div>
+
+          <div class="col-4 d-flex justify-content-center">
+            <table>
+              <tr>
+                <td>
+                  <!--                                        <input name="image" style="display: none">-->
+                  <input class="form-control" type="file" name="bookCover" id="formFile"
+                         accept="image/png, image/jpeg" onchange="showPreview(event)"
+                         style="display: none">
+                </td>
+              </tr>
+              <tr>
+
+                <td>
+                  <img th:src="@{${book.getBookCoverPath()}}" id="image-preview"
+                       class="img-fluid rounded mt-4" width="270">
+                </td>
+              </tr>
+
+            </table>
+          </div>
+        </div>
+
+
+        <!-- Review Book -->
+        <form th:action="@{{id} (id=${book.id})}" th:object="${review}"
+              th:method="post" id="review_form">
+          <div class="justify-content-center">
+            <h4>Ratings and Reviews</h4>
+            <table>
+              <tr>
+                <td><h4>Rating : </h4></td>
+                <td><h4 th:text="${book.bookRate}"></h4></td>
+              </tr>
+              <tr>
+                <td th:text="${review.bookId.title}"></td>
+                <td th:text="${review.accountId.username}"></td>
+              </tr>
+              <tr>
+                <td><p>Rate book</p></td>
+                <td><input type="number" id="bookrate" name="bookrate" th:value="${review.rating}">
+                </td>
+              </tr>
+              <tr>
+                <td><h4>Comment</h4></td>
+                <td><textarea class="form-control" id="comment" placeholder="Enter comment ..."
+                              th:field="*{content}"></textarea></td>
+              </tr>
+            </table>
+            <input type="number" id="bookIdRate" name="bookIdRate" th:value="${book.id}" style="display: none">
+            <input type="number" id="accountIdRate" name="accountIdRate" th:value="${account.id}" style="display: none">
+            <input type="submit" id="post-review" value="Post" class="btn btn-danger">
+
+          </div>
+        </form>
+        <div th:each="review : ${reviews}">
+          <div style="padding: 10px">
+            <p th:text="${review.accountId.username}"></p>
+            <p th:text="${review.rating}"></p>
+            <p th:text="${review.content}"></p>
+            <i th:text="${review.datePost}"></i>
+          </div>
+        </div>
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="container-fluid">
+        <div class="row text-muted">
+          <div class="col-6 text-start">
+            <p class="mb-0">
+
+            </p>
+          </div>
+          <div class="col-6 text-end">
+            <ul class="list-inline">
+              <li class="list-inline-item">
+                <button type="button" id="save_button" class="btn btn-success btn-sm"
+                        onclick="submitForm()" style="display: none">Save
+                </button>
+                <button type="button" id="edit_button" class="btn btn-secondary btn-sm"
+                        th:unless="${idBook == null}" onclick="enterEditMode1()">Edit Information
+                </button>
+                <button type="button" id="add_button" class="btn btn-success btn-sm"
+                        th:unless="${idBook != null}" onclick="submitForm()">Add
+                </button>
+              </li>
+              <!--                            <li class="list-inline-item">-->
+              <!--                                <a class="text-muted" href="" target="_blank">Privacy</a>-->
+              <!--                            </li>-->
+              <!--                            <li class="list-inline-item">-->
+              <!--                                <a class="text-muted" href="" target="_blank">Privacy</a>-->
+              <!--                            </li>-->
+              <!--                            <li class="list-inline-item">-->
+              <!--                                <a class="text-muted" href="" target="_blank">Terms</a>-->
+              <!--                            </li>-->
+            </ul>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
+</div>
+
+<script src="/js/my.js"></script>
+<script src="/js/app.js"></script>
+<script type="text/javascript">
+  function showPreview(event) {
+    if (event.target.files.length > 0) {
+      var src = URL.createObjectURL(event.target.files[0]);
+      var preview = document.getElementById("image-preview");
+      preview.src = src;
+
+    }
+  }
+
+  function submitForm() {
+    // document.getElementById("save_form").click();
+    document.getElementById("book_form").submit();
+  }
+
+  function enterEditMode1() {
+    document.getElementById("edit_button").style.display = "none";
+    document.getElementById("save_button").style.display = "block";
+
+    document.getElementById("title").readOnly = false;
+    document.getElementById("author").readOnly = false;
+    document.getElementById("description").readOnly = false;
+    document.getElementById("releaseDate").readOnly = false;
+    document.getElementById("page").readOnly = false;
+    document.getElementById("bookcover").disabled = false;
+    document.getElementById("category").disabled = false;
+  }
+</script>
+
+</body>
+
+</html>

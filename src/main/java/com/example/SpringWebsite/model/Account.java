@@ -2,6 +2,7 @@ package com.example.SpringWebsite.model;
 
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class Account {
@@ -21,10 +22,31 @@ public class Account {
 
     private  int role;
 
+    @OneToMany(cascade = CascadeType.PERSIST)
+    private List<Review> reviewList;
+
     public Account() {
     }
 
+    public Account(Integer id, String username, String password, String email, String fullName, String dateOfBirth, String note, int role, List<Review> reviewList) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.fullName = fullName;
+        this.dateOfBirth = dateOfBirth;
+        this.note = note;
+        this.role = role;
+        this.reviewList = reviewList;
+    }
 
+    public List<Review> getReviewList() {
+        return reviewList;
+    }
+
+    public void setReviewList(List<Review> reviewList) {
+        this.reviewList = reviewList;
+    }
 
     public Account(String username, String password, String email, int role) {
         this.username = username;

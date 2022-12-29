@@ -112,12 +112,12 @@
                         <tbody>
 
                         <tr th:each = "book: ${books}" th:unless="${books == null}" class="item" >
-                            <td  th:text="${book.id}" th:onclick=" |window.location.href= '/book/${book.id}'| "></td>
-                            <td class="d-flex justify-content-center"><img th:src="@{${book.getBookCoverPath()}}" id="image-preview" class="" width="50px" height="75px" th:onclick=" |window.location.href= '/book/${book.id}'| "></td>
-                            <td th:text="${book.title}" th:onclick=" |window.location.href= '/book/${book.id}'| "></td>
-                            <td th:text="${book.author}" th:onclick=" |window.location.href= '/book/${book.id}'| "></td>
-                            <td th:text="${book.category}" th:onclick=" |window.location.href= '/book/${book.id}'| "></td>
-                            <td th:onclick=" |window.location.href= '/book/${book.id}'| ">$<span th:text="${book.price}"></span></td>
+                            <td  th:text="${book.id}" th:onclick=" |window.location.href= '/${book.id}'| "></td>
+                            <td class="d-flex justify-content-center"><img th:src="@{${book.getBookCoverPath()}}" id="image-preview" class="" width="50px" height="75px" th:onclick=" |window.location.href= '/${book.id}'| "></td>
+                            <td th:text="${book.title}" th:onclick=" |window.location.href= '/${book.id}'| "></td>
+                            <td th:text="${book.author}" th:onclick=" |window.location.href= '/${book.id}'| "></td>
+                            <td th:text="${book.category}" th:onclick=" |window.location.href= '/${book.id}'| "></td>
+                            <td th:onclick=" |window.location.href= '/${book.id}'| ">$<span th:text="${book.price}"></span></td>
 
                             <td th:if="${session.username != null}">
                                 <div class="row justify-content-around d-flex justify-content-center d-inline-block">

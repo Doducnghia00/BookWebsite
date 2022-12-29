@@ -1,11 +1,14 @@
 package com.example.SpringWebsite.controller;
 
 
+import com.example.SpringWebsite.model.Account;
 import com.example.SpringWebsite.model.BookEntity;
 import com.example.SpringWebsite.model.Category;
+import com.example.SpringWebsite.model.Review;
 import com.example.SpringWebsite.repository.AccountRepository;
 import com.example.SpringWebsite.repository.BookRepository;
 import com.example.SpringWebsite.repository.CategoryRepository;
+import com.example.SpringWebsite.repository.ReviewRepository;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,16 +17,15 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
-import java.awt.print.Book;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 @Controller
 public class BookController {
@@ -34,11 +36,13 @@ public class BookController {
     BookRepository bookRepository;
 
     final CategoryRepository categoryRepository;
+    final ReviewRepository reviewRepository;
 
-    public BookController(AccountRepository accountRepository, BookRepository bookRepository, CategoryRepository categoryRepository) {
+    public BookController(AccountRepository accountRepository, BookRepository bookRepository, CategoryRepository categoryRepository, ReviewRepository reviewRepository) {
         this.accountRepository = accountRepository;
         this.bookRepository = bookRepository;
         this.categoryRepository = categoryRepository;
+        this.reviewRepository = reviewRepository;
     }
 
     @GetMapping("/book/{id}")
@@ -174,10 +178,106 @@ public class BookController {
         return "redirect:/";
     }
 
+    //Info book for user
     @GetMapping("/{id}")
-    public String detailBook(@PathVariable String id){
-        return "test";
+    public String detailBook(Model model, @PathVariable String id, HttpSession session) {
+
+        if (session.getAttribute("username") == null){
+            return "redirect:/";
+        }
+
+        List<Category> categoryList  = categoryRepository.findAll(Sort.by(Sort.Direction.ASC, "name"));
+        model.addAttribute("categoryList", categoryList);
+
+
+
+        System.out.println("GET BOOK BY ID");
+        model.addAttribute("id", id);
+        BookEntity book = bookRepository.findById(Integer.valueOf(id)).get();
+        System.out.println( "   Path:" +book.getBookCoverPath());
+        System.out.println(book.getImage());
+
+        Integer bookId = book.getId();
+        model.addAttribute("idBook", bookId);
+        model.addAttribute("book", book);
+
+        //Get account
+        String username = session.getAttribute("username").toString();
+        Account account = accountRepository.findByUsername(username);
+        model.addAttribute("account",account);
+
+        //Add new review
+        Review review = new Review();
+        review.setBookId(book);
+        review.setAccountId(account);
+        model.addAttribute("review",review);
+
+        //Send reviews list
+        List<Review> reviews = getAllReviewByBookId(bookId);
+        model.addAttribute("reviews",reviews);
+
+
+        return "book-info-user";
     }
+
+
+    @PostMapping("/{id}")
+    public String addReviewBook(@ModelAttribute Review review, @RequestParam("bookrate") Float bookrate,
+                                @RequestParam("accountIdRate") Integer accountIdRate,
+                                @PathVariable Integer id) throws IOException {
+        System.out.println("POST BOOK");
+        review.setRating(bookrate);
+
+        BookEntity book = bookRepository.findById(id).get();
+        Account account = accountRepository.findById(accountIdRate);
+
+        review.setBookId(book);
+        review.setAccountId(account);
+        reviewRepository.save(review);
+
+        book.setBookRate(calBookRate(book));
+        bookRepository.save(book);
+
+        return "redirect:/";
+    }
+
+
+    public List<Review> getAllReviewByBookId(Integer id) {
+        List<Review> reviewList1 = new ArrayList<>();
+        List<Review> reviewList2 = reviewRepository.findAll();
+        for (Review review: reviewList2) {
+            if(Objects.equals(review.getBookId().getId(), id)){
+                reviewList1.add(review);
+            }
+        }
+        return reviewList1;
+    }
+
+    public Float calBookRate(BookEntity book) {
+        List<Review> reviewListList1 = reviewRepository.findAll();
+        List<Review> reviewListList2 = new ArrayList<>();
+        for (Review review : reviewListList1) {
+            if (Objects.equals(review.getBookId().getId(), book.getId())) {
+                reviewListList2.add(review);
+            }
+        }
+
+        if (reviewListList2.isEmpty()) {
+            return (float) 0;
+        } else {
+            float sum = 0;
+            float count = 0;
+            float bookRate;
+            for (Review review : reviewListList2) {
+                sum += review.getRating();
+                count++;
+            }
+            bookRate = sum / count;
+            return bookRate;
+        }
+    }
+
+
 
 
 
