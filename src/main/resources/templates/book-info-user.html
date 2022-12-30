@@ -79,123 +79,110 @@
 
     <main class="content">
       <div class="container-fluid p-0">
-        <div class="row justify-content-evenly">
-          <div class="col-4 d-flex justify-content-center">
+        <div class="row">
+          <div class="card col-4">
+            <div class="card-body">
+              <div class="row">
+                <div class="d-flex justify-content-center">
+                  <table>
+                    <tr>
+                      <td>
+                        <img th:src="@{${book.getBookCoverPath()}}" id="image-preview"
+                             class="img-fluid rounded mt-4" width="230">
+                      </td>
+                    </tr>
 
-            <table>
-              <tr>
-                <input type="number" id="id" name="id"
-                       th:value="${book.id}" readonly style="display: none"/>
-                <td class="col-4"><label for="title">Title<span>*</span></label></td>
-                <td class="col-1"></td>
-                <td class="col-4"><label for="author">Author<span>*</span></label></td>
-              </tr>
+                  </table>
+                </div>
+              </div>
+              <div class="row">
+                <div class="">
+                  <div class=" row text-center mt-3">
+                    <h3 th:text="${book.title}"></h3>
+                  </div>
+                  <div class="row">
+                    <table class="mt-3 ms-3 me-3">
+                      <tr>
+                        <td class="col-2"></td>
+                        <td class="col-4">Author</td>
+                        <td class="col-4" th:text="${book.author}"></td>
+                        <td class="col-2"></td>
+                      </tr>
 
-              <tr>
-                <!--                                        <td class="col-4"><input type="text" class="form-control" id="title" name="title" th:value="${book.title}" th:readonly="${idBook != null}"/></td><td></td>-->
-                <td class="col-4" id="title" th:text="${book.title}">
-                <td></td>
-                <td class="col-4" id="author" th:text="${book.author}">
-                  <!--                                            <input type="text" class="form-control" id="author" name="author" th:value="${book.author}"  th:readonly="${idBook != null}"/>-->
+                      <tr>
+                        <td class=""></td>
+                        <td>Release Date</td>
+                        <td th:text="${book.releaseDate}"></td>
+                        <td class=""></td>
+                      </tr>
+                      <tr>
+                        <td class=""></td>
+                        <td>Page</td>
+                        <td id="page" th:text="${book.page}"></td>
+                        <td class=""></td>
+                      </tr>
+                      <tr>
+                        <td class=""></td>
+                        <td>Category</td>
+                        <td th:text="${book.category}"></td>
+                        <td class=""></td>
+                      </tr>
+                    </table>
+                  </div>
 
-                </td>
-              </tr>
-              <tr>
-                <td><p th:text="${messageTitle}" style="color:red;"/></td>
-                <td></td>
-                <td><p th:text="${messageAuthor}" style="color:red;"/></td>
-              </tr>
-
-
-              <tr>
-                <td><label for="releaseDate">Release Date<span>*</span></label></td>
-                <td></td>
-                <td><label for="page">Page</label></td>
-              </tr>
-              <tr>
-                <td id="releaseDate" th:text="${book.releaseDate}"></td>
-                <td></td>
-                <td id="page" th:text="${book.page}"></td>
-              </tr>
-              <tr>
-                <td><p th:text="${messageReleaseDate}" style="color:red;"/></td>
-              </tr>
-              <tr>
-                <td colspan="3"><label for="category">Category</label></td>
-
-              </tr>
-              <tr>
-                <!--                                        <td><input type="text" class="form-control" id="category" name="category"-->
-                <!--                                                   th:value="${book.category}" /></td><td></td>-->
-                <td id="category" th:text="${book.category}"></td>
-                <td></td>
-              </tr>
-            </table>
-
+                </div>
+              </div>
+            </div>
           </div>
+          <!-- Review Book -->
+          <div class="card col-8 p-5">
+            <div class="row text-center">
+              <h2 class="h2 mt-3" th:text="${book.title}"></h2>
+            </div>
+            <div class="row text-body mt-2">
+              <p class="p-2" th:text="${book.description}"></p>
+            </div>
+            <hr>
+            <div class="row">
+              <h4 class="h4 w-50 text-start">Ratings and Reviews</h4>
+              <h4 class="h4 w-50 text-end" th:text="'Rating : ' + ${book.bookRate}"></h4>
+            </div>
+            <div class="row">
+              <form th:action="@{{id} (id=${book.id})}" th:object="${review}"
+                    th:method="post" id="review_form">
+                <div class="justify-content-center">
+                  <h5 class="h5 text-success" >Username <span th:text="${review.accountId.username}"></span></h5>
+                  <table>
+                    <tr>
+                      <td><p class="h5">Rate book</p></td>
+                      <td><input type="number" id="bookrate" name="bookrate" th:value="${review.rating}">
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><p class="h5">Comment</p></td>
+                      <td><textarea class="form-control" id="comment" placeholder="Enter comment ..."
+                                    th:field="*{content}"></textarea></td>
+                    </tr>
+                  </table>
+                  <input type="number" id="bookIdRate" name="bookIdRate" th:value="${book.id}" style="display: none">
+                  <input type="number" id="accountIdRate" name="accountIdRate" th:value="${account.id}" style="display: none">
+                  <input type="submit" id="post-review" value="Post" class="btn btn-danger">
 
-          <div class="col-4 d-flex justify-content-center">
-            <table>
-              <tr>
-                <td>
-                  <!--                                        <input name="image" style="display: none">-->
-                  <input class="form-control" type="file" name="bookCover" id="formFile"
-                         accept="image/png, image/jpeg" onchange="showPreview(event)"
-                         style="display: none">
-                </td>
-              </tr>
-              <tr>
+                </div>
+              </form>
+            </div>
 
-                <td>
-                  <img th:src="@{${book.getBookCoverPath()}}" id="image-preview"
-                       class="img-fluid rounded mt-4" width="270">
-                </td>
-              </tr>
-
-            </table>
-          </div>
-        </div>
-
-
-        <!-- Review Book -->
-        <form th:action="@{{id} (id=${book.id})}" th:object="${review}"
-              th:method="post" id="review_form">
-          <div class="justify-content-center">
-            <h4>Ratings and Reviews</h4>
-            <table>
-              <tr>
-                <td><h4>Rating : </h4></td>
-                <td><h4 th:text="${book.bookRate}"></h4></td>
-              </tr>
-              <tr>
-                <td th:text="${review.bookId.title}"></td>
-                <td th:text="${review.accountId.username}"></td>
-              </tr>
-              <tr>
-                <td><p>Rate book</p></td>
-                <td><input type="number" id="bookrate" name="bookrate" th:value="${review.rating}">
-                </td>
-              </tr>
-              <tr>
-                <td><h4>Comment</h4></td>
-                <td><textarea class="form-control" id="comment" placeholder="Enter comment ..."
-                              th:field="*{content}"></textarea></td>
-              </tr>
-            </table>
-            <input type="number" id="bookIdRate" name="bookIdRate" th:value="${book.id}" style="display: none">
-            <input type="number" id="accountIdRate" name="accountIdRate" th:value="${account.id}" style="display: none">
-            <input type="submit" id="post-review" value="Post" class="btn btn-danger">
-
-          </div>
-        </form>
-        <div th:each="review : ${reviews}">
-          <div style="padding: 10px">
-            <p th:text="${review.accountId.username}"></p>
-            <p th:text="${review.rating}"></p>
-            <p th:text="${review.content}"></p>
-            <i th:text="${review.datePost}"></i>
+            <div th:each="review : ${reviews}">
+              <div style="padding: 10px">
+                <p th:text="${review.accountId.username}"></p>
+                <p th:text="${review.rating}"></p>
+                <p th:text="${review.content}"></p>
+                <i th:text="${review.datePost}"></i>
+              </div>
+            </div>
           </div>
         </div>
+
 
       </div>
     </main>
